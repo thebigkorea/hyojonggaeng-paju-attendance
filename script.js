@@ -57,36 +57,43 @@ function resetDailyIfNeeded(){
   }
 }
 
-function register(){
+async function register(){
 
   const name =
-    document.getElementById("name")
-      .value.trim();
+    document.getElementById("name").value.trim();
 
   const phone =
-    document.getElementById("phone")
-      .value.trim();
+    document.getElementById("phone").value.trim();
 
   const regMsg =
     document.getElementById("regMsg");
 
   if(!name || !phone){
-
-    regMsg.innerText =
-      "이름과 전화번호를 입력하세요";
-
+    regMsg.innerText = "이름과 전화번호를 입력하세요";
     return;
   }
 
-  const user = {
-    name,
-    phone
-  };
+  regMsg.innerText = "직원 등록중...";
 
-  localStorage.setItem(
-    KEY,
-    JSON.stringify(user)
-  );
+  await fetch(API_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":"text/plain;charset=utf-8"
+    },
+    body:JSON.stringify({
+      action:"registerEmployee",
+      name:name,
+      phone:phone,
+      userAgent:navigator.userAgent
+    })
+  });
+
+  const user = { name, phone };
+
+  localStorage.setItem(KEY, JSON.stringify(user));
+
+  regMsg.innerText = "직원 등록 완료";
 
   showMain(user);
 }
