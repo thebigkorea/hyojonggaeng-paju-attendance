@@ -1,108 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>압구정 길채정 출퇴근</title>
+  <meta charset="UTF-8">
 
-<style>
-* { box-sizing: border-box; }
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-body {
-  margin: 0;
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
-  background: #f8f5ef;
-}
+  <title>효종갱 파주 출퇴근</title>
 
-.container {
-  max-width: 480px;
-  margin: auto;
-  padding: 20px;
-}
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4a2d18">
 
-.card {
-  background: white;
-  border-radius: 24px;
-  padding: 26px;
-  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
-}
-
-.title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 900;
-}
-
-.sub {
-  text-align: center;
-  color: #777;
-  margin-bottom: 28px;
-  font-size: 20px;
-}
-
-input {
-  width: 100%;
-  height: 64px;
-  margin-top: 12px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
-  padding-left: 18px;
-  font-size: 22px;
-}
-
-button {
-  width: 100%;
-  height: 72px;
-  border: none;
-  border-radius: 18px;
-  margin-top: 18px;
-  font-size: 26px;
-  font-weight: 900;
-  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
-  box-shadow: 0 8px 0 rgba(0,0,0,0.16);
-  cursor: pointer;
-}
-
-button:active {
-  transform: translateY(5px) scale(0.98);
-  box-shadow: 0 3px 0 rgba(0,0,0,0.18);
-  opacity: 0.85;
-}
-
-button:disabled {
-  opacity: 0.35;
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-main { background: #4a2d18; color: white; }
-.btn-in { background: #1e8e3e; color: white; }
-.btn-out { background: #d93025; color: white; }
-
-.btn-reset {
-  background: #eee2d4;
-  color: #4a2d18;
-  height: 52px;
-  font-size: 17px;
-  border-radius: 14px;
-  margin-top: 24px;
-  box-shadow: none;
-  opacity: 0.8;
-}
-
-.btn-reset:active {
-  transform: translateY(2px) scale(0.99);
-  opacity: 0.65;
-}
-
-.status {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 20px;
-  font-weight: 900;
-  color: #4a2d18;
-}
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -110,246 +19,67 @@ button:disabled {
 <div class="container">
 
   <div id="register" class="card">
+
     <div class="title">효종갱</div>
-    <div class="sub">신세계파주프리미엄아울렛점 출퇴근</div>
 
-    <input id="name" placeholder="이름">
-    <input id="phone" placeholder="전화번호">
+    <div class="sub">
+      신세계파주프리미엄아울렛점 직원등록
+    </div>
 
-    <button class="btn-main" onclick="register()">등록하기</button>
-    <div id="regMsg" class="status"></div>
+    <input id="name"
+           placeholder="이름">
+
+    <input id="phone"
+           placeholder="전화번호">
+
+    <button class="btn-main"
+            onclick="register()">
+      등록하기
+    </button>
+
+    <div id="regMsg"
+         class="status"></div>
+
   </div>
 
-  <div id="main" class="card" style="display:none;">
+  <div id="main"
+       class="card"
+       style="display:none;">
+
     <div class="title">출퇴근</div>
-    <div id="userName" class="sub"></div>
 
-    <button id="inBtn" class="btn-in" onclick="send('출근')">출근</button>
-    <button id="outBtn" class="btn-out" onclick="send('퇴근')">퇴근</button>
+    <div id="userName"
+         class="sub"></div>
 
-    <button class="btn-reset" onclick="reset()">직원 정보 다시 등록</button>
+    <button id="inBtn"
+            class="btn-in"
+            onclick="send('출근')">
+      출근
+    </button>
 
-    <div id="msg" class="status"></div>
+    <button id="outBtn"
+            class="btn-out"
+            onclick="send('퇴근')">
+      퇴근
+    </button>
+
+    <button class="btn-reset"
+            onclick="reset()">
+      직원 정보 다시 등록
+    </button>
+
+    <div id="msg"
+         class="status"></div>
+
   </div>
 
 </div>
 
+<script src="script.js"></script>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwepn9ybkMA6BPSqobW1009eCdxxdbfRv_1yuesYqormK3F1Rr74Rp6m_fN7CKiCud5/exec";
-
-const KEY = "HYOJONGGAENG_PAJU_USER";
-const ACTION_KEY = "HYOJONGGAENG_PAJU_ACTION";
-const DATE_KEY = "HYOJONGGAENG_PAJU_ACTION_DATE";
-
-const STORE_LAT = 37.5274;
-const STORE_LNG = 127.0400;
-
-window.onload = () => {
-  resetDailyIfNeeded();
-
-  const saved = JSON.parse(localStorage.getItem(KEY));
-  if (saved) {
-    showMain(saved);
-  }
-};
-
-function todayKey() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function resetDailyIfNeeded() {
-  const savedDate = localStorage.getItem(DATE_KEY);
-  const today = todayKey();
-
-  if (savedDate && savedDate !== today) {
-    localStorage.removeItem(ACTION_KEY);
-    localStorage.removeItem(DATE_KEY);
-  }
-}
-
-function register() {
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const regMsg = document.getElementById("regMsg");
-
-  if (!name || !phone) {
-    regMsg.innerText = "이름과 전화번호를 입력하세요";
-    return;
-  }
-
-  const user = { name, phone };
-  localStorage.setItem(KEY, JSON.stringify(user));
-
-  showMain(user);
-}
-
-function showMain(user) {
-  document.getElementById("register").style.display = "none";
-  document.getElementById("main").style.display = "block";
-  document.getElementById("userName").innerText = user.name + "님";
-  updateBtn();
-}
-
-function updateBtn() {
-  resetDailyIfNeeded();
-
-  const last = localStorage.getItem(ACTION_KEY);
-
-  const inBtn = document.getElementById("inBtn");
-  const outBtn = document.getElementById("outBtn");
-  const msg = document.getElementById("msg");
-
-  if (!last) {
-    inBtn.disabled = false;
-    outBtn.disabled = true;
-    msg.innerText = "";
-    return;
-  }
-
-  if (last === "출근") {
-    inBtn.disabled = true;
-    outBtn.disabled = false;
-    msg.innerText = "출근 완료 · 퇴근 가능";
-    return;
-  }
-
-  if (last === "퇴근") {
-    inBtn.disabled = true;
-    outBtn.disabled = true;
-    msg.innerText = "오늘 출퇴근 완료";
-  }
-}
-
-function getLocation() {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve({
-        latitude: "",
-        longitude: "",
-        distance: ""
-      });
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const distance = Math.round(calculateDistanceMeters(lat, lng, STORE_LAT, STORE_LNG)) + "m";
-
-        resolve({
-          latitude: lat,
-          longitude: lng,
-          distance: distance
-        });
-      },
-      () => {
-        resolve({
-          latitude: "",
-          longitude: "",
-          distance: "위치권한없음"
-        });
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 8000,
-        maximumAge: 0
-      }
-    );
-  });
-}
-
-async function send(type) {
-  const user = JSON.parse(localStorage.getItem(KEY));
-  const msg = document.getElementById("msg");
-  const inBtn = document.getElementById("inBtn");
-  const outBtn = document.getElementById("outBtn");
-
-  if (!user) {
-    msg.innerText = "직원 정보를 다시 등록해주세요";
-    return;
-  }
-
-  msg.innerText = "위치 확인중...";
-
-  if (type === "출근") inBtn.innerText = "출근 처리중...";
-  if (type === "퇴근") outBtn.innerText = "퇴근 처리중...";
-
-  inBtn.disabled = true;
-  outBtn.disabled = true;
-
-  const location = await getLocation();
-
-  msg.innerText = type + " 처리중...";
-
-  try {
-    await fetch(API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        name: user.name,
-        phone: user.phone,
-        type: type,
-        store: "한국의집 효종갱 신세계파주프리미엄아울렛점",
-        timestamp: new Date().toISOString(),
-        latitude: location.latitude,
-        longitude: location.longitude,
-        distance: location.distance,
-        userAgent: navigator.userAgent
-      })
-    });
-
-    localStorage.setItem(ACTION_KEY, type);
-    localStorage.setItem(DATE_KEY, todayKey());
-
-    msg.innerText = type + " 완료되었습니다";
-
-  } catch (e) {
-    msg.innerText = "오류가 발생했습니다. 다시 시도해주세요";
-  }
-
-  inBtn.innerText = "출근";
-  outBtn.innerText = "퇴근";
-
-  updateBtn();
-}
-
-function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
-  const R = 6371000;
-  const dLat = toRad(lat2 - lat1);
-  const dLng = toRad(lng2 - lng1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-    Math.cos(toRad(lat2)) *
-    Math.sin(dLng / 2) *
-    Math.sin(dLng / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
-}
-
-function toRad(value) {
-  return value * Math.PI / 180;
-}
-
-function reset() {
-  if (!confirm("직원 정보를 다시 등록하시겠습니까?")) return;
-
-  localStorage.removeItem(KEY);
-  localStorage.removeItem(ACTION_KEY);
-  localStorage.removeItem(DATE_KEY);
-
-  location.reload();
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
 }
 </script>
 

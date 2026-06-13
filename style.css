@@ -1,0 +1,188 @@
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:
+    "Noto Sans KR",
+    "Apple SD Gothic Neo",
+    Arial,
+    sans-serif;
+
+  background:#f8f5ef;
+}
+
+.container{
+  max-width:480px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  border-radius:24px;
+  padding:26px;
+
+  box-shadow:
+    0 14px 35px rgba(0,0,0,0.12);
+
+  margin-top:20px;
+}
+
+.title{
+  text-align:center;
+  font-size:34px;
+  font-weight:900;
+  color:#4a2d18;
+}
+
+.sub{
+  text-align:center;
+  color:#777;
+  margin-bottom:28px;
+  font-size:20px;
+  line-height:1.5;
+}
+
+input{
+  width:100%;
+  height:64px;
+
+  margin-top:12px;
+
+  border-radius:14px;
+  border:1px solid #ddd;
+
+  padding-left:18px;
+
+  font-size:22px;
+
+  outline:none;
+}
+
+input:focus{
+  border-color:#4a2d18;
+}
+
+button{
+  width:100%;
+  height:72px;
+
+  border:none;
+  border-radius:18px;
+
+  margin-top:18px;
+
+  font-size:26px;
+  font-weight:900;
+
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    opacity 0.08s ease;
+
+  box-shadow:
+    0 8px 0 rgba(0,0,0,0.16);
+
+  cursor:pointer;
+}
+
+button:active{
+  transform:
+    translateY(5px)
+    scale(0.98);
+
+  box-shadow:
+    0 3px 0 rgba(0,0,0,0.18);
+
+  opacity:0.85;
+}
+
+button:disabled{
+  opacity:0.35;
+  transform:none;
+  box-shadow:none;
+}
+
+.btn-main{
+  background:#4a2d18;
+  color:white;
+}
+
+.btn-in{
+  background:#1e8e3e;
+  color:white;
+}
+
+.btn-out{
+  background:#d93025;
+  color:white;
+}
+
+.btn-reset{
+  background:#eee2d4;
+  color:#4a2d18;
+
+  height:52px;
+
+  font-size:17px;
+
+  border-radius:14px;
+
+  margin-top:24px;
+
+  box-shadow:none;
+
+  opacity:0.8;
+}
+
+.btn-reset:active{
+  transform:
+    translateY(2px)
+    scale(0.99);
+
+  opacity:0.65;
+}
+
+.status{
+  text-align:center;
+
+  margin-top:20px;
+
+  font-size:20px;
+  font-weight:900;
+
+  color:#4a2d18;
+
+  line-height:1.5;
+}
+
+@media(max-width:480px){
+
+  .container{
+    padding:14px;
+  }
+
+  .card{
+    padding:20px;
+  }
+
+  .title{
+    font-size:28px;
+  }
+
+  .sub{
+    font-size:17px;
+  }
+
+  input{
+    height:58px;
+    font-size:19px;
+  }
+
+  button{
+    height:66px;
+    font-size:22px;
+  }
+}
