@@ -277,6 +277,8 @@ async function send(type){
 
       body:JSON.stringify({
 
+        action:"recordAttendance",
+        
         name:user.name,
 
         phone:user.phone,
