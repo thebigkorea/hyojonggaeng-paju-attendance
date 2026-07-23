@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>효종갱 파주점 출퇴근 관리자</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --line: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #7c2d12;
+      --primary-dark: #5b2110;
+      --success: #0f766e;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        "Pretendard",
+        "Noto Sans KR",
+        "Apple SD Gothic Neo",
+        Arial,
+        sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(1500px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .hero {
+      background:
+        linear-gradient(
+          135deg,
+          #3b1f10 0%,
+          #6b3519 55%,
+          #9a612c 100%
+        );
+      color: #fff;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 3vw, 38px);
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.6;
+    }
+
+    .hero-badge {
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns:
+        repeat(2, minmax(150px, 1fr))
+        minmax(220px, 1.4fr)
+        minmax(170px, 0.8fr)
+        auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      color: #374151;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 0 13px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.12);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 44px;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-weight: 800;
+      transition: 0.2s ease;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-light {
+      background: #eef2f7;
+      color: #243447;
+    }
+
+    .btn-success {
+      background: #0f766e;
+      color: #fff;
+    }
+
+    .btn-warning {
+      background: #b45309;
+      color: #fff;
+    }
+
+    .btn-dark {
+      background: #1f2937;
+      color: #fff;
+    }
+
+    .btn-small {
+      min-height: 34px;
+      border-radius: 9px;
+      padding: 0 11px;
+      font-size: 13px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 19px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .summary-value {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .summary-note {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-weight: 800;
+    }
+
+    .filter-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1080px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 13px 12px;
+      border-bottom: 1px solid #edf0f2;
+      text-align: center;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #334155;
+      font-weight: 900;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover {
+      background: #fafcff;
+    }
+
+    .name-cell {
+      text-align: left;
+      font-weight: 900;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .status-working {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-completed {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .status-missing {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .distance-good {
+      color: #0f766e;
+      font-weight: 900;
+    }
+
+    .distance-warning {
+      color: #b45309;
+      font-weight: 900;
+    }
+
+    .empty {
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .loading-layer {
+      position: fixed;
+      inset: 0;
+      background: transparent;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .loading-layer.show {
+      display: flex;
+    }
+
+    .loading-box {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 24px 30px;
+      font-weight: 900;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 2000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(950px, 100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 50%;
+      background: #eef2f7;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .detail-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .detail-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 15px;
+      background: #fafafa;
+    }
+
+    .detail-box small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+
+    .detail-box strong {
+      font-size: 20px;
+    }
+
+    .textarea {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 14px;
+      line-height: 1.65;
+      font: inherit;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .print-title {
+      display: none;
+    }
+
+    @media (max-width: 1100px) {
+      .search-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        width: min(100% - 20px, 1500px);
+        padding-top: 10px;
+      }
+
+      .hero {
+        border-radius: 18px;
+        padding: 22px 18px;
+      }
+
+      .panel {
+        padding: 16px;
+        border-radius: 16px;
+      }
+
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .summary-card {
+        padding: 15px;
+      }
+
+      .summary-value {
+        font-size: 23px;
+      }
+
+      .detail-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .button-row .btn {
+        flex: 1;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .no-print,
+      .hero,
+      .search-panel,
+      .summary-grid,
+      .panel-title .button-row,
+      .filter-tabs,
+      .modal,
+      .loading-layer {
+        display: none !important;
+      }
+
+      .page {
+        width: 100%;
+        padding: 0;
+      }
+
+      .panel {
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+      }
+
+      .print-title {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+
+      table {
+        min-width: 0;
+        font-size: 11px;
+      }
+
+      th,
+      td {
+        padding: 7px 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="loadingLayer" class="loading-layer">
+  <div class="loading-box">조회 중입니다...</div>
+</div>
+
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-row">
+      <div>
+        <h1>효종갱 파주점 출퇴근 관리</h1>
+        <p>
+          출퇴근 현황, 기간별 근무내역, 직원별 상세정보를
+          한 화면에서 확인합니다.
+        </p>
+      </div>
+
+      <div class="hero-badge" id="storeBadge">
+        효종갱 파주점 · 신세계파주프리미엄아울렛점
+      </div>
+    </div>
+  </header>
+
+
+  <section class="panel search-panel no-print">
+    <div class="panel-title">
+      <h2>조회 조건</h2>
+
+      <div class="button-row">
+        <button class="btn btn-light" onclick="setToday()">
+          오늘
+        </button>
+
+        <button class="btn btn-light" onclick="setThisMonth()">
+          이번 달
+        </button>
+      </div>
+    </div>
+
+    <div class="search-grid">
+      <div class="field">
+        <label for="startDate">시작일</label>
+        <input type="date" id="startDate">
+      </div>
+
+      <div class="field">
+        <label for="endDate">종료일</label>
+        <input type="date" id="endDate">
+      </div>
+
+      <div class="field">
+        <label for="keyword">직원 검색</label>
+        <input
+          type="text"
+          id="keyword"
+          placeholder="직원명 또는 전화번호"
+          onkeydown="handleSearchEnter(event)"
+        >
+      </div>
+
+      <div class="field">
+        <label for="statusFilter">상태</label>
+        <select id="statusFilter">
+          <option value="전체">전체</option>
+          <option value="근무중">근무중</option>
+          <option value="퇴근완료">퇴근완료</option>
+          <option value="퇴근미처리">퇴근미처리</option>
+        </select>
+      </div>
+
+      <div class="button-row">
+        <button class="btn btn-primary" onclick="loadAttendance()">
+          조회
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">조회 건수</div>
+      <div class="summary-value" id="summaryTotal">0</div>
+      <div class="summary-note">조회 조건에 맞는 근무일</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">근무중</div>
+      <div class="summary-value" id="summaryWorking">0</div>
+      <div class="summary-note">오늘 출근 후 근무 중</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">퇴근완료</div>
+      <div class="summary-value" id="summaryCompleted">0</div>
+      <div class="summary-note">출근·퇴근 모두 완료</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">퇴근미처리</div>
+      <div class="summary-value" id="summaryMissing">0</div>
+      <div class="summary-note">지난 출근 후 퇴근 없음</div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-label">평균 근무시간</div>
+      <div class="summary-value" id="summaryAverage">0분</div>
+      <div class="summary-note">퇴근완료 내역 기준</div>
+    </div>
+  </section>
+
+
+  <section class="panel">
+    <div class="panel-title">
+      <div>
+        <h2>출퇴근 원장</h2>
+        <div class="notice" id="periodText"></div>
+      </div>
+
+      <div class="button-row no-print">
+        <button class="btn btn-success" onclick="downloadExcel()">
+          엑셀 다운로드
+        </button>
+
+        <button class="btn btn-dark" onclick="window.print()">
+          인쇄
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-tabs no-print">
+      <button
+        class="filter-tab active"
+        data-status="전체"
+        onclick="selectStatusTab(this)"
+      >
+        전체
+      </button>
+
+      <button
+        class="filter-tab"
+        data-status="근무중"
+        onclick="selectStatusTab(this)"
+      >
+        근무중
+      </button>
+
+      <button
+        class="filter-tab"
+        data-status="퇴근완료"
+        onclick="selectStatusTab(this)"
+      >
+        퇴근완료
+      </button>
+
+      <button
+        class="filter-tab"
+        data-status="퇴근미처리"
+        onclick="selectStatusTab(this)"
+      >
+        퇴근미처리
+      </button>
+    </div>
+
+    <div class="print-title">
+      <h2>효종갱 파주점 출퇴근 원장</h2>
+      <div id="printPeriodText"></div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>날짜</th>
+            <th>직원명</th>
+            <th>전화번호</th>
+            <th>출근</th>
+            <th>퇴근</th>
+            <th>근무시간</th>
+            <th>상태</th>
+            <th>출근거리</th>
+            <th>퇴근거리</th>
+            <th class="no-print">관리</th>
+          </tr>
+        </thead>
+
+        <tbody id="attendanceBody">
+          <tr>
+            <td colspan="10" class="empty">
+              조회 중입니다.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+
+<div
+  id="detailModal"
+  class="modal"
+  onclick="handleModalBackground(event)"
+>
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 id="detailTitle">직원 상세조회</h3>
+
+      <button class="icon-btn" onclick="closeDetailModal()">
+        ×
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="notice" id="detailPeriod"></div>
+
+      <div class="detail-summary">
+        <div class="detail-box">
+          <small>근무일수</small>
+          <strong id="detailWorkDays">0일</strong>
+        </div>
+
+        <div class="detail-box">
+          <small>퇴근완료</small>
+          <strong id="detailCompletedDays">0일</strong>
+        </div>
+
+        <div class="detail-box">
+          <small>퇴근미처리</small>
+          <strong id="detailMissingDays">0일</strong>
+        </div>
+
+        <div class="detail-box">
+          <small>평균 근무시간</small>
+          <strong id="detailAverage">0분</strong>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table style="min-width:760px;">
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <th>출근</th>
+              <th>퇴근</th>
+              <th>근무시간</th>
+              <th>상태</th>
+              <th>출근거리</th>
+              <th>퇴근거리</th>
+            </tr>
+          </thead>
+
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div class="panel-title">
+          <h3 style="margin:0;">카카오톡용 복사</h3>
+
+          <button
+            class="btn btn-warning"
+            onclick="copyKakaoText()"
+          >
+            내용 복사
+          </button>
+        </div>
+
+        <textarea
+          id="kakaoText"
+          class="textarea"
+          readonly
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbwepn9ybkMA6BPSqobW1009eCdxxdbfRv_1yuesYqormK3F1Rr74Rp6m_fN7CKiCud5/exec";
+
+let attendanceData = [];
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+    initializeAdmin();
+  }
+);
+
+
+function initializeAdmin() {
+  const today = getLocalDateKey(new Date());
+
+  document.getElementById("startDate").value = today;
+  document.getElementById("endDate").value = today;
+
+  loadAttendance();
+}
+
+
+async function apiRequest(data) {
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      "서버 응답 오류: " + response.status
+    );
+  }
+
+  const text = await response.text();
+
+  if (!text) {
+    throw new Error("서버 응답이 없습니다.");
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error(
+      "서버 응답 형식이 올바르지 않습니다."
+    );
+  }
+}
+
+
+async function loadAttendance() {
+  const filters = {
+    action: "getAdminAttendanceList",
+    startDate: document.getElementById("startDate").value,
+    endDate: document.getElementById("endDate").value,
+    keyword: document.getElementById("keyword").value.trim(),
+    status: document.getElementById("statusFilter").value
+  };
+
+  showLoading(true);
+
+  try {
+    const result = await apiRequest(filters);
+
+    if (!result || result.success === false) {
+      alert(
+        result && result.message
+          ? result.message
+          : "조회에 실패했습니다."
+      );
+      return;
+    }
+
+    attendanceData = result.records || [];
+
+    if (result.storeName) {
+      document.getElementById("storeBadge").textContent =
+        result.storeName;
+    }
+
+    renderSummary(result.summary || {});
+    renderAttendance(attendanceData);
+
+    const period =
+      (result.startDate || "") +
+      " ~ " +
+      (result.endDate || "");
+
+    document.getElementById("periodText").textContent =
+      "조회기간: " + period;
+
+    document.getElementById("printPeriodText").textContent =
+      "조회기간: " + period;
+
+    syncStatusTabs(result.status || "전체");
+
+  } catch (error) {
+    alert(
+      "조회 오류: " +
+      getErrorMessage(error)
+    );
+
+  } finally {
+    showLoading(false);
+  }
+}
+
+
+function renderSummary(summary) {
+  document.getElementById("summaryTotal").textContent =
+    numberText(summary.total);
+
+  document.getElementById("summaryWorking").textContent =
+    numberText(summary.working);
+
+  document.getElementById("summaryCompleted").textContent =
+    numberText(summary.completed);
+
+  document.getElementById("summaryMissing").textContent =
+    numberText(summary.missingCheckout);
+
+  document.getElementById("summaryAverage").textContent =
+    summary.averageWorkText || "0분";
+}
+
+
+function renderAttendance(list) {
+  const tbody =
+    document.getElementById("attendanceBody");
+
+  if (!list || !list.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="10" class="empty">
+          조회된 출퇴근 내역이 없습니다.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = list.map(function(item) {
+    const safeName =
+      JSON.stringify(item.name || "");
+
+    const safePhone =
+      JSON.stringify(item.phone || "");
+
+    return `
+      <tr>
+        <td>${escapeHtml(item.date || "")}</td>
+
+        <td class="name-cell">
+          ${escapeHtml(item.name || "")}
+        </td>
+
+        <td>
+          ${escapeHtml(formatPhone(item.phone || ""))}
+        </td>
+
+        <td>${escapeHtml(item.checkIn || "-")}</td>
+        <td>${escapeHtml(item.checkOut || "-")}</td>
+        <td>${escapeHtml(item.workTimeText || "-")}</td>
+
+        <td>
+          ${statusHtml(item.status)}
+        </td>
+
+        <td class="${distanceClass(item.checkInDistance)}">
+          ${escapeHtml(formatDistance(item.checkInDistance))}
+        </td>
+
+        <td class="${distanceClass(item.checkOutDistance)}">
+          ${escapeHtml(formatDistance(item.checkOutDistance))}
+        </td>
+
+        <td class="no-print">
+          <button
+            class="btn btn-light btn-small"
+            onclick='openEmployeeDetail(${safeName}, ${safePhone})'
+          >
+            상세
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+
+async function openEmployeeDetail(name, phone) {
+  const data = {
+    action: "getEmployeeAttendanceDetail",
+    name: name,
+    phone: phone,
+    startDate: document.getElementById("startDate").value,
+    endDate: document.getElementById("endDate").value
+  };
+
+  showLoading(true);
+
+  try {
+    const result = await apiRequest(data);
+
+    if (!result || result.success === false) {
+      alert(
+        result && result.message
+          ? result.message
+          : "직원 상세조회에 실패했습니다."
+      );
+      return;
+    }
+
+    renderEmployeeDetail(result);
+
+    document
+      .getElementById("detailModal")
+      .classList.add("show");
+
+  } catch (error) {
+    alert(
+      "상세조회 오류: " +
+      getErrorMessage(error)
+    );
+
+  } finally {
+    showLoading(false);
+  }
+}
+
+
+function renderEmployeeDetail(result) {
+  const employee = result.employee || {};
+  const summary = result.summary || {};
+  const period = result.period || {};
+  const records = result.records || [];
+
+  document.getElementById("detailTitle").textContent =
+    (employee.name || "직원") +
+    " 출퇴근 상세";
+
+  document.getElementById("detailPeriod").textContent =
+    "조회기간: " +
+    (period.startDate || "") +
+    " ~ " +
+    (period.endDate || "") +
+    " · " +
+    formatPhone(employee.phone || "");
+
+  document.getElementById("detailWorkDays").textContent =
+    numberText(summary.workDays) + "일";
+
+  document.getElementById("detailCompletedDays").textContent =
+    numberText(summary.completedDays) + "일";
+
+  document.getElementById("detailMissingDays").textContent =
+    numberText(summary.missingCheckoutDays) + "일";
+
+  document.getElementById("detailAverage").textContent =
+    summary.averageWorkText || "0분";
+
+  const tbody = document.getElementById("detailBody");
+
+  if (!records.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty">
+          조회된 내역이 없습니다.
+        </td>
+      </tr>
+    `;
+
+  } else {
+    tbody.innerHTML = records.map(function(item) {
+      return `
+        <tr>
+          <td>${escapeHtml(item.date || "")}</td>
+          <td>${escapeHtml(item.checkIn || "-")}</td>
+          <td>${escapeHtml(item.checkOut || "-")}</td>
+          <td>${escapeHtml(item.workTimeText || "-")}</td>
+
+          <td>
+            ${statusHtml(item.status)}
+          </td>
+
+          <td class="${distanceClass(item.checkInDistance)}">
+            ${escapeHtml(formatDistance(item.checkInDistance))}
+          </td>
+
+          <td class="${distanceClass(item.checkOutDistance)}">
+            ${escapeHtml(formatDistance(item.checkOutDistance))}
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("kakaoText").value =
+    result.kakaoText || "";
+}
+
+
+function closeDetailModal() {
+  document
+    .getElementById("detailModal")
+    .classList.remove("show");
+}
+
+
+function handleModalBackground(event) {
+  if (event.target.id === "detailModal") {
+    closeDetailModal();
+  }
+}
+
+
+function copyKakaoText() {
+  const textarea =
+    document.getElementById("kakaoText");
+
+  const text = textarea.value;
+
+  if (!text) {
+    alert("복사할 내용이 없습니다.");
+    return;
+  }
+
+  if (
+    navigator.clipboard &&
+    window.isSecureContext
+  ) {
+    navigator.clipboard.writeText(text)
+      .then(function() {
+        alert(
+          "카카오톡용 내용이 복사되었습니다."
+        );
+      })
+      .catch(function() {
+        fallbackCopy();
+      });
+
+  } else {
+    fallbackCopy();
+  }
+}
+
+
+function fallbackCopy() {
+  const textarea =
+    document.getElementById("kakaoText");
+
+  textarea.focus();
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+
+    alert(
+      "카카오톡용 내용이 복사되었습니다."
+    );
+
+  } catch (error) {
+    alert(
+      "복사하지 못했습니다. 내용을 직접 선택해 주세요."
+    );
+  }
+}
+
+
+function downloadExcel() {
+  if (!attendanceData.length) {
+    alert(
+      "다운로드할 출퇴근 내역이 없습니다."
+    );
+    return;
+  }
+
+  const rows = [[
+    "날짜",
+    "직원명",
+    "전화번호",
+    "출근시간",
+    "퇴근시간",
+    "근무시간",
+    "상태",
+    "출근거리",
+    "퇴근거리"
+  ]];
+
+  attendanceData.forEach(function(item) {
+    rows.push([
+      item.date || "",
+      item.name || "",
+      formatPhone(item.phone || ""),
+      item.checkIn || "",
+      item.checkOut || "",
+      item.workTimeText || "",
+      item.status || "",
+      formatDistance(item.checkInDistance),
+      formatDistance(item.checkOutDistance)
+    ]);
+  });
+
+  const csv = rows.map(function(row) {
+    return row.map(csvEscape).join(",");
+  }).join("\r\n");
+
+  const blob = new Blob(
+    ["\ufeff" + csv],
+    {
+      type: "text/csv;charset=utf-8;"
+    }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+
+  const startDate =
+    document.getElementById("startDate").value || "";
+
+  const endDate =
+    document.getElementById("endDate").value || "";
+
+  anchor.href = url;
+
+  anchor.download =
+    "효종갱_파주점_출퇴근원장_" +
+    startDate +
+    "_" +
+    endDate +
+    ".csv";
+
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+
+  URL.revokeObjectURL(url);
+}
+
+
+function selectStatusTab(button) {
+  const status =
+    button.dataset.status || "전체";
+
+  document.getElementById("statusFilter").value =
+    status;
+
+  document
+    .querySelectorAll(".filter-tab")
+    .forEach(function(tab) {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.status === status
+      );
+    });
+
+  loadAttendance();
+}
+
+
+function syncStatusTabs(status) {
+  document
+    .querySelectorAll(".filter-tab")
+    .forEach(function(tab) {
+      tab.classList.toggle(
+        "active",
+        tab.dataset.status === status
+      );
+    });
+}
+
+
+function setToday() {
+  const today = getLocalDateKey(new Date());
+
+  document.getElementById("startDate").value =
+    today;
+
+  document.getElementById("endDate").value =
+    today;
+
+  loadAttendance();
+}
+
+
+function setThisMonth() {
+  const now = new Date();
+
+  const firstDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  );
+
+  document.getElementById("startDate").value =
+    getLocalDateKey(firstDay);
+
+  document.getElementById("endDate").value =
+    getLocalDateKey(now);
+
+  loadAttendance();
+}
+
+
+function handleSearchEnter(event) {
+  if (event.key === "Enter") {
+    loadAttendance();
+  }
+}
+
+
+function statusHtml(status) {
+  if (status === "근무중") {
+    return `
+      <span class="status status-working">
+        근무중
+      </span>
+    `;
+  }
+
+  if (status === "퇴근완료") {
+    return `
+      <span class="status status-completed">
+        퇴근완료
+      </span>
+    `;
+  }
+
+  return `
+    <span class="status status-missing">
+      퇴근미처리
+    </span>
+  `;
+}
+
+
+function distanceClass(value) {
+  const number = parseFloat(value);
+
+  if (isNaN(number)) {
+    return "";
+  }
+
+  return number <= 100
+    ? "distance-good"
+    : "distance-warning";
+}
+
+
+function formatDistance(value) {
+  if (
+    value === "" ||
+    value === null ||
+    value === undefined
+  ) {
+    return "-";
+  }
+
+  const number = parseFloat(value);
+
+  if (isNaN(number)) {
+    return String(value);
+  }
+
+  return (
+    Math.round(number).toLocaleString("ko-KR") +
+    "m"
+  );
+}
+
+
+function formatPhone(phone) {
+  const value = String(phone || "")
+    .replace(/[^0-9]/g, "");
+
+  if (value.length === 11) {
+    return value.replace(
+      /(\d{3})(\d{4})(\d{4})/,
+      "$1-$2-$3"
+    );
+  }
+
+  if (value.length === 10) {
+    return value.replace(
+      /(\d{3})(\d{3})(\d{4})/,
+      "$1-$2-$3"
+    );
+  }
+
+  return value;
+}
+
+
+function numberText(value) {
+  return Number(value || 0)
+    .toLocaleString("ko-KR");
+}
+
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+
+  if (
+    text.includes(",") ||
+    text.includes('"') ||
+    text.includes("\n")
+  ) {
+    return (
+      '"' +
+      text.replace(/"/g, '""') +
+      '"'
+    );
+  }
+
+  return text;
+}
+
+
+function getLocalDateKey(date) {
+  const year = date.getFullYear();
+
+  const month = String(
+    date.getMonth() + 1
+  ).padStart(2, "0");
+
+  const day = String(
+    date.getDate()
+  ).padStart(2, "0");
+
+  return (
+    year +
+    "-" +
+    month +
+    "-" +
+    day
+  );
+}
+
+
+function showLoading(show) {
+  document
+    .getElementById("loadingLayer")
+    .classList.toggle("show", !!show);
+}
+
+
+function getErrorMessage(error) {
+  if (!error) {
+    return "알 수 없는 오류";
+  }
+
+  return error.message || String(error);
+}
+
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+</script>
+
+</body>
+</html>
