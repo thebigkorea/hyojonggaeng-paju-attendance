@@ -10,8 +10,8 @@ const ACTION_KEY =
 const DATE_KEY =
   "HYOJONGGAENG_PAJU_ACTION_DATE";
 
-const STORE_LAT = 37.7916;
-const STORE_LNG = 126.6955;
+const STORE_LAT = 37.7696;
+const STORE_LNG = 126.6965;
 
 window.onload = () => {
 
