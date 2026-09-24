@@ -2,86 +2,60 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>효종갱 파주 출퇴근</title>
-
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4a2d18">
-
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
-
   <div id="register" class="card">
+    <img class="company-logo" src="images/thebigkorea-logo.png" alt="더큰코리아 로고">
+    <div class="brand">효종갱</div>
+    <div class="store-sub">신세계 파주 프리미엄 아울렛 · 출퇴근 관리</div>
+    <h1>직원 등록</h1>
+    <p class="guide">최초 1회만 등록하면 됩니다.<br>이후에는 자동으로 출퇴근 화면이 열립니다.</p>
+    <label>직원명</label>
+    <input id="name" placeholder="이름" autocomplete="name">
+    <label>전화번호</label>
+    <input id="phone" placeholder="010-1234-5678" inputmode="tel" autocomplete="tel">
+    <button class="btn-main" onclick="register()">직원 등록</button>
+    <div id="regMsg" class="status"></div>
+  </div>
 
-    <div class="title">효종갱</div>
+  <div id="main" class="card" style="display:none;">
+    <img class="company-logo" src="images/thebigkorea-logo.png" alt="더큰코리아 로고">
+    <div class="brand">효종갱</div>
+    <div class="store-sub">신세계 파주 프리미엄 아울렛 · 출퇴근 관리</div>
+    <h1>출퇴근 체크</h1>
+    <div class="hello">오늘도 좋은 하루 되세요.</div>
+    <div id="clock" class="clock"></div>
 
-    <div class="sub">
-      신세계파주프리미엄아울렛점 직원등록
+    <div class="quote-card">
+      <span>오늘의 한마디</span>
+      <strong id="quoteText">좋은 하루는 작은 성실함에서 시작됩니다.</strong>
     </div>
 
-    <input id="name"
-           placeholder="이름">
+    <div class="user-card">
+      <strong id="userName"></strong>
+      <span id="userPhone"></span>
+    </div>
 
-    <input id="phone"
-           placeholder="전화번호">
+    <div class="time-grid">
+      <div class="time-box"><span>출근</span><strong id="inTime">--:--</strong></div>
+      <div class="time-box"><span>퇴근</span><strong id="outTime">--:--</strong></div>
+    </div>
 
-    <button class="btn-main"
-            onclick="register()">
-      등록하기
-    </button>
-
-    <div id="regMsg"
-         class="status"></div>
-
+    <button id="inBtn" class="btn-in" onclick="send('출근')">출근</button>
+    <button id="outBtn" class="btn-out" onclick="send('퇴근')">퇴근</button>
+    <button class="btn-reset" onclick="reset()">직원정보 변경</button>
+    <div id="msg" class="status status-main"></div>
   </div>
-
-  <div id="main"
-       class="card"
-       style="display:none;">
-
-    <div class="title">출퇴근</div>
-
-    <div id="userName"
-         class="sub"></div>
-
-    <button id="inBtn"
-            class="btn-in"
-            onclick="send('출근')">
-      출근
-    </button>
-
-    <button id="outBtn"
-            class="btn-out"
-            onclick="send('퇴근')">
-      퇴근
-    </button>
-
-    <button class="btn-reset"
-            onclick="reset()">
-      직원 정보 다시 등록
-    </button>
-
-    <div id="msg"
-         class="status"></div>
-
-  </div>
-
 </div>
-
 <script src="script.js"></script>
-
 <script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
-}
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
 </script>
-
 </body>
 </html>
